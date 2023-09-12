@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const { pokemon } = require('./pokedex.json');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /*
 GET - Obtener recursos
@@ -14,6 +16,11 @@ app.get("/", (req, res, next) => {
     //res es simplemnte la respuesta del servidor ligado a los códigos
     //de http, en caso 200 es que todo salio bien, en caso 404 respuesta de error
     return res.status(200).send("Bienvenido al Pokedex");
+});
+
+
+app.post('/pokemon', (req, res, next) => {
+    return res.status(200).send(req.body);
 });
 //Al poner los ":" se genera una variable y un enlace
 //a una dirección que desinga el usuario
@@ -42,7 +49,7 @@ app.get('/pokemon/:name([A-Za-z]+)', (req, res, next) => {
     */
     const name = req.params.name;
     const pk = pokemon.filter((p) => {
-        return (p.name.toUpperCase() == name.toUpperCase()) ? p : null;
+        return (p.name.toUpperCase() == name.toUpperCase()) && p;
     });
 
     console.log(pk);
