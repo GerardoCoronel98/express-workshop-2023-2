@@ -16,34 +16,41 @@ pokemon.get('/', async (req, res, next) => {
 pokemon.get('/:id([0-9]{1,3})', async (req, res, next) => {
 
     // const id = req.params.id - 1;
-    // (id >= 0 && id <= 150) ?
-    //     res.status(200).send(db[req.params.id - 1]) :
-    //     res.status(404).send("Pokemon no encontrado");
-
-    const pkmn = await db.query("SELECT pok_name FROM pokemon");
-    return res.status(200).json(pkmn.pok_name);
+    // if (id >= 0 && id <= 150) {
+    //     return res.status(200).send(pk[req.params.id - 1]);
+    // }
+    // return res.status(404).send("Pokemon no encotnrado")
+    try {
+        const id = req.params.id - 1;
+        if (id >= 0 && id <= 721) {
+            const pokemonid = await db.query("SELECT pok_name, pok_id FROM pokemon")
+            return res.status(200).json(pokemonid[req.params.id - 1])
+        }
+        return res.status(404).send("Pokemon no encontrado")
+    } catch (error) {
+        next(error)
+    }
 });
 /*
 Se agrego el '.toUpperCase' para en caso de realizar la busqueda
 se actualice a las mayusculas como guste el usuario.
 */
-pokemon.get('/:name([A-Za-z]+)', (req, res, next) => {
+pokemon.get('/:name([A-Za-z]+)', async (req, res, next) => {
+    try {
+        const name = req.params.name;
+        const pkmn = await db.query("SELECT pok_name FROM pokemon WHERE pok_name = ?", [name])
+        if (pkmn.length > 0) {
+            return res.status(200).json({ name: pkmn[0].pok_name });
+        }
+        return res.status(404).send("pokemon no econtrado")
 
-    /* 
-    condición ? valor si verdadero : valor si falso
-    if si queremos que retorne algo
-    */
-    const name = req.params.name;
+    } catch (error) {
+        next(error)
+    }
 
-    const pkmn = db.filter((p) => {
-        return (p.name.toUpperCase() == name.toUpperCase()) && p;
-    });
 
-    console.log(pk);
-
-    (pkmn.length > 0) ?
-        res.status(200).send(pkmn) :
-        res.status(404).send("Pokemon no encontrado")
-});
+})
 
 module.exports = pokemon;
+
+
