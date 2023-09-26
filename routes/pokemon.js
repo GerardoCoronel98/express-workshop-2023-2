@@ -18,8 +18,6 @@ pokemon.post('/', async (req, res, next) => {
     }
     return res.status(500).json({ code: 500, message: "Campos incompletos" })
 });
-//Al poner los ":" se genera una variable y un enlace
-//a una dirección que desinga el usuario
 
 pokemon.delete('/:id([0-9]{1,3})', async (req, res, next) => {
 
@@ -70,7 +68,6 @@ pokemon.get('/', async (req, res, next) => {
 
 });
 
-
 pokemon.get('/:id([0-9]{1,3})', async (req, res, next) => {
 
     // const id = req.params.id - 1;
@@ -85,10 +82,6 @@ pokemon.get('/:id([0-9]{1,3})', async (req, res, next) => {
     }
     return res.status(404).send({ code: 404, message: "Pokemon no encontrado" })
 });
-/*
-Se agrego el '.toUpperCase' para en caso de realizar la busqueda
-se actualice a las mayusculas como guste el usuario.
-*/
 
 pokemon.get('/:name([A-Za-z]+)', async (req, res, next) => {
 
@@ -101,5 +94,3 @@ pokemon.get('/:name([A-Za-z]+)', async (req, res, next) => {
 })
 
 module.exports = pokemon;
-
-
